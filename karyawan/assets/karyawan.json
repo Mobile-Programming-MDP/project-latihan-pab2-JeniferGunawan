@@ -1,0 +1,22 @@
+[
+    {
+        "nama": "Budi Setiawan",
+        "umur": 30,
+        "alamat": {
+            "jalan": "Jl. Pahlawan",
+            "kota": "Bandung",
+            "provinsi": "Jawa Barat"
+        },
+        "hobi": ["Membaca", "Menulis"]
+    },
+    {
+        "nama": "Andi Wijaya",
+        "umur": 28,
+        "alamat": {
+            "jalan": "Jl. Merdeka",
+            "kota": "Jakarta",
+            "provinsi": "DKI Jakarta"
+        },
+        "hobi": ["Bersepeda", "Memasak"]
+    }
+]
