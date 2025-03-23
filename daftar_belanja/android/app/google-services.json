@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "650820330118",
+    "firebase_url": "https://first-app-aefe6-default-rtdb.firebaseio.com",
+    "project_id": "first-app-aefe6",
+    "storage_bucket": "first-app-aefe6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650820330118:android:793d91925c3e6ae7826707",
+        "android_client_info": {
+          "package_name": "com.example.daftar_belanja"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-_FV2Wuv8zQzBXNywOJeYwGLGUvKQN0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:650820330118:android:a27093e5be3af78e826707",
+        "android_client_info": {
+          "package_name": "com.example.daftarbelanja"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-_FV2Wuv8zQzBXNywOJeYwGLGUvKQN0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
