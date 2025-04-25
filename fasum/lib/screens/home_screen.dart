@@ -1,5 +1,6 @@
 // screens/home_screen.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fasum/screens/add_post_screen.dart';
 import 'package:fasum/screens/sign_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -91,8 +92,12 @@ class HomeScreen extends StatelessWidget {
             });
         }),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => AddPostScreen()),
+          );
+        },
+        child: const Icon(Icons.add),
     ),
     );
   }
