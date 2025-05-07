@@ -1,0 +1,2 @@
+D:/kerja praktik/project-latihan-pab2-JeniferGunawan/fasum/android/app/.cxx/Debug/4n6n5gl6/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/kerja praktik/project-latihan-pab2-JeniferGunawan/fasum/android/app/.cxx/Debug/4n6n5gl6/armeabi-v7a/CMakeFiles/rebuild_cache.dir

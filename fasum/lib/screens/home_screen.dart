@@ -8,9 +8,34 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? selectedCategory;
+  List<String> categories = [
+    'Jalan Rusak',
+    'Marka Pudar',
+    'Lampu Mati',
+    'Trotoar Rusak',
+    'Rambu Rusak',
+    'Jembatan Rusak',
+    'Sampah Menumpuk',
+    'Saluran Tersumbat',
+    'Sungai Tercemar',
+    'Sampah Sungai',
+    'Pohon Tumbang',
+    'Taman Rusak',
+    'Fasilitas Rusak',
+    'Pipa Bocor',
+    'Vandalisme',
+    'Banjir',
+    'Lainnya',
+  ];
   String formatTime(DateTime dateTime) {
     final now = DateTime.now();
     final diff = now.difference(dateTime);
@@ -25,10 +50,12 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const SignInScreen()));
+      MaterialPageRoute(builder: (context) => const SignInScreen()),
+    );
   }
 
   @override
@@ -38,25 +65,35 @@ class HomeScreen extends StatelessWidget {
         title: const Text("Home"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.filter_list)),
           IconButton(
             onPressed: () {
-              signOut(context);
+              signOut();
             },
             icon: const Icon(Icons.logout),
-          )
+          ),
         ],
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("posts")
-            .orderBy('createdAt', descending: true)
-            .snapshots(),
+        stream:
+            FirebaseFirestore.instance
+                .collection("posts")
+                .orderBy('createdAt', descending: true)
+                .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData)
             return const Center(child: CircularProgressIndicator());
-
-          final posts = snapshot.data!.docs;
-
+          
+        final posts = snapshot.data!.docs.where((doc){
+            final data = doc.data();
+            final category = data['category']?? 'Lainnya';
+            return selectedCategory == null || selectedCategory == category;
+        }).toList();
+        if (posts.isEmpty){
+          return const Center(
+            child: Text("Tidak ada laporan untuk kategori ini !"),
+          );
+        }
           //Script lengkap bagian ListView.builder
           //https://pastebin.com/kSXM5mTX
           return ListView.builder(
@@ -67,9 +104,7 @@ class HomeScreen extends StatelessWidget {
               final description = data['description'];
               final createdAtStr = data['createdAt'];
               final fullName = data['fullName'] ?? 'Anonim';
-              final latitude = data['latitude'];
-              final longitude = data['longitude'];
-              final category = data['category'] ?? 'Lainnya';
+
               //parse ke DateTime
               final createdAt = DateTime.parse(createdAtStr);
               String heroTag =
@@ -79,15 +114,17 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => DetailScreen(
-                          imageBase64: imageBase64,
-                          description: description,
-                          createdAt: createdAt,
-                          fullName: fullName,
-                          latitude: latitude,
-                          longitude: longitude,
-                          category: category,
-                          heroTag: heroTag),
+                      builder:
+                          (context) => DetailScreen(
+                            imageBase64: imageBase64,
+                            description: description,
+                            createdAt: createdAt,
+                            fullName: fullName,
+                            latitude: 0.0,
+                            longitude: 0.0,
+                            category: "Jalan Rusak",
+                            heroTag: heroTag,
+                          ),
                     ),
                   );
                 },
@@ -102,15 +139,20 @@ class HomeScreen extends StatelessWidget {
                       if (imageBase64 != null)
                         ClipRRect(
                           borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10)),
-                          child: Image.memory(base64Decode(imageBase64),
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: 200),
+                            top: Radius.circular(10),
+                          ),
+                          child: Image.memory(
+                            base64Decode(imageBase64),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: 200,
+                          ),
                         ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -120,7 +162,9 @@ class HomeScreen extends StatelessWidget {
                                 Text(
                                   formatTime(createdAt),
                                   style: const TextStyle(
-                                      fontSize: 12, color: Colors.grey),
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
                                 ),
                                 Text(
                                   fullName,
@@ -136,7 +180,7 @@ class HomeScreen extends StatelessWidget {
                             Text(
                               description ?? '',
                               style: const TextStyle(fontSize: 16),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -150,9 +194,9 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => AddPostScreen()),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => AddPostScreen()));
         },
         child: const Icon(Icons.add),
       ),
